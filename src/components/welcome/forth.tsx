@@ -5,7 +5,9 @@ import { FunctionalComponent } from "vue";
 export const Forth = () => {
   return (
     <div class={s.card}>
-      <img class={s.pig} src={cloud} />
+      <svg>
+        <use xlinkHref="#cloud"></use>
+      </svg>
       <h2>
         每日提醒
         <br />

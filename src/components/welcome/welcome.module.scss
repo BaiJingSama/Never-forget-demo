@@ -3,7 +3,6 @@
   background: var(--welcome-card-bg);
   border-radius: 8px;
   padding: 16px;
-  margin: 16px 16px 0 16px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,13 +12,16 @@
     margin-top: 32px;
     font-size: 28px;
   }
+  > svg {
+    width: 128px;
+  }
 }
 .actions {
   position: fixed;
   z-index: var(--z-index-bottom-nav);
   background: var(--welcome-bg-end);
   left: 0;
-  bottom: 0;
+  bottom: 1px;
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -34,6 +36,3 @@
   }
 }
 
-.pig {
-  width: 128px;
-}

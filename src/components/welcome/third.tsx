@@ -4,7 +4,9 @@ import chart from "../../assets/svg/chart.svg";
 export const Third = () => {
   return (
     <div class={s.card}>
-      <img class={s.pig} src={chart} />,
+      <svg>
+        <use xlinkHref="#chart"></use>
+      </svg>
       <h2>
         每日提醒
         <br />
