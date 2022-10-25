@@ -6,11 +6,11 @@ import { useSwipe } from "../hooks/useSwipe";
 
 export const Welcome = defineComponent({
   setup: (props, context) => {
-    const main = ref<HTMLElement | null>(null);
-    const { direction, swiping } = useSwipe(main);
-    watchEffect(() => {
-      console.log(swiping.value, direction.value);
-    });
+    const main = ref<HTMLElement | undefined>();
+    // const { direction, swiping } = useSwipe(main);
+    // watchEffect(() => {
+    //   console.log(swiping.value, direction.value);
+    // });
     // watchEffect 类似于React的 useEffect
     return () => (
       <div class={s.wrapper}>
