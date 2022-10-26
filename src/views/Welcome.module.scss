@@ -37,7 +37,7 @@
 
 .slide_fade_enter_active,
 .slide_fade_leave_active {
-  transition: all 0.5s ease-out;
+  transition: all var(--transition-duration) ease-out;
   position: absolute;
   left: 0;
   top: 0;
