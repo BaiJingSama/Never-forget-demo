@@ -1,10 +1,6 @@
 import { defineComponent, PropType } from "vue";
 import s from "./Icon.module.scss";
 
-// interface Props {
-//   name: string;
-// }
-
 export type IconName = string;
 
 export const Icon = defineComponent({
