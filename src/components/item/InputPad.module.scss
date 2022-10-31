@@ -11,10 +11,11 @@
     align-items: center;
     justify-content: center;
     color: var(--date-text);
-     > .icon {
+    > .icon {
       width: 24px;
       height: 24px;
       margin-right: 8px;
+      fill: var(--amount-text);
     }
   }
   > .amount {
