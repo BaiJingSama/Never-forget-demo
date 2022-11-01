@@ -13,6 +13,29 @@ export const InputPad = defineComponent({
     const now = new Date();
     const refDate = ref<Date>(now);
     const appendText = (n: number | string) => {
+      const nString = n.toString();
+      const dotIndex = refAmount.value.indexOf(".");
+      if (refAmount.value.length >= 10) {
+        return;
+      }
+      if (dotIndex >= 0 && refAmount.value.length - dotIndex > 2) {
+        return;
+      }
+      if (nString === ".") {
+        if (dotIndex >= 0) {
+          // 已经有小数点了
+          return;
+        }
+      } else if (nString === "0") {
+        if (refAmount.value.indexOf("0") >= 0 && refAmount.value.length <= 1) {
+          //没小数点但是有0
+          return;
+        }
+      } else {
+        if (refAmount.value === "0") {
+          refAmount.value = "";
+        }
+      }
       refAmount.value += n.toString();
     };
     const buttons = [
