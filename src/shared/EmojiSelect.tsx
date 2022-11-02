@@ -6,6 +6,9 @@ export const EmojiSelect = defineComponent({
     name: {
       type: String as PropType<string>,
     },
+    modelValue: {
+      type: String,
+    },
   },
   setup: (props, context) => {
     const refSelected = ref(0);
@@ -91,7 +94,14 @@ export const EmojiSelect = defineComponent({
       return (selectedItem as Array<string>).map((category: string) =>
         emojiList
           .find((item) => item[0] === category)?.[1]
-          .map((item) => <li onClick={() => onClickEmoji(item)}>{item}</li>)
+          .map((item) => (
+            <li
+              class={item === props.modelValue ? s.selectedEmoji : ""}
+              onClick={() => onClickEmoji(item)}
+            >
+              {item}
+            </li>
+          ))
       );
     });
 
