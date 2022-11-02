@@ -40,3 +40,14 @@
     font-size: 12px;
   }
 }
+
+.actions {
+  padding: 0 16px 16px 16px;
+  display: flex;
+  justify-content: space-between;
+
+  .removeTags,
+  .removeTagsAndItem {
+    width: calc(50% - 8px);
+  }
+}
