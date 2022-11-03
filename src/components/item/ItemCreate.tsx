@@ -58,7 +58,13 @@ export const ItemCreate = defineComponent({
                 onUpdateSelected={(name: string) => (refKind.value = name)}
               > */}
               <div class={s.wrapper}>
-                <Tabs v-model:selected={refKind.value} class={s.tabs}>
+                <Tabs
+                  v-model:selected={refKind.value}
+                  // selected={refKind.value}
+                  // onUpdate:selected={() => console.log(1)}
+                  // 二选一
+                  class={s.tabs}
+                >
                   <Tab name="支出" class={s.tags_wrapper}>
                     <div class={s.tag}>
                       <div class={s.sign}>

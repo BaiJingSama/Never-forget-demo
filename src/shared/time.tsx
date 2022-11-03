@@ -55,7 +55,18 @@ export class Time {
     const date = new Date(this.date.getTime());
     switch (unit) {
       case "year":
+        const currentDate = date.getDate();
+        date.setDate(1);
         date.setFullYear(date.getFullYear() + amount);
+        const targetDate = new Date(
+          date.getFullYear(),
+          date.getMonth() + 1,
+          0,
+          0,
+          0,
+          0
+        ).getDate();
+        date.setDate(Math.min(currentDate, targetDate));
         break;
       case "month":
         const d = date.getDate();
