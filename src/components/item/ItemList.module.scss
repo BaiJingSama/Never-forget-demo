@@ -5,6 +5,7 @@
   justify-content: center;
   align-items: center;
   background: var(--overlay-mask-bg);
+  z-index: var(--overlay-z-index);
   &_inner {
     background: var(--bg);
     width: 80vw;
