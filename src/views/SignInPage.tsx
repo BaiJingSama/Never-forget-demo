@@ -3,6 +3,7 @@ import { defineComponent, PropType, reactive, ref } from "vue";
 import { MainLayout } from "../layouts/MainLayout";
 import { Button } from "../shared/Button";
 import { Form, FormItem } from "../shared/Form";
+import { http } from "../shared/HttpClient";
 import { Icon } from "../shared/Icon";
 import { validate } from "../shared/validate";
 import s from "./SignInPage.module.scss";
@@ -14,7 +15,7 @@ export const SignInPage = defineComponent({
   },
   setup: (props, context) => {
     const formData = reactive({
-      email: "",
+      email: "1303802862@qq.com",
       code: "",
     });
     const errors = reactive({
@@ -42,13 +43,21 @@ export const SignInPage = defineComponent({
         ])
       );
     };
+    const onError = (error: any) => {
+      if (error.response.status === 422) {
+        Object.assign(errors, error.response.data.errors);
+        console.log([errors]);
+      }
+      throw error;
+    };
     const onClickSendValidationCode = async () => {
-      const response = await axios
-        .post("/api/v1/validation_codes", {
+      const response = await http
+        .post("/validation_codes", {
           email: formData.email,
         })
-        .catch(() => {
+        .catch((error) => {
           //失败
+          onError(error);
         });
       //成功
       refValidationCode.value?.startCount();
@@ -80,7 +89,7 @@ export const SignInPage = defineComponent({
                   placeholder="输入六位数字"
                   onClick={onClickSendValidationCode}
                   ref={refValidationCode}
-                  countFrom={60}
+                  countFrom={1}
                 />
                 <FormItem style={{ paddingTop: 64 + "px" }}>
                   <Button>登录</Button>
