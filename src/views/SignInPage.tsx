@@ -1,5 +1,6 @@
 import axios from "axios";
 import { defineComponent, PropType, reactive, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useBool } from "../hooks/useBool";
 import { MainLayout } from "../layouts/MainLayout";
 import { Button } from "../shared/Button";
@@ -31,6 +32,8 @@ export const SignInPage = defineComponent({
       on: disabled,
       off: enabled,
     } = useBool(false);
+    const router = useRouter();
+    const route = useRoute();
     const onSubmit = async (e: Event) => {
       e.preventDefault();
       Object.assign(errors, {
@@ -51,9 +54,14 @@ export const SignInPage = defineComponent({
         ])
       );
       if (!hasError(errors)) {
-        const response = await http.post<{ jwt: string }>("/session", formData);
+        const response = await http
+          .post<{ jwt: string }>("/session", formData)
+          .catch(onError);
         localStorage.setItem("jwt", response.data.jwt);
-        history.push("/");
+        //下方代码为保存到查询参数里
+        // router.push('/sign_in?return_to=' + encodeURIComponent(route.fullPath))
+        const returnTo = route.query.return_to?.toString();
+        router.push(returnTo || "/");
       }
     };
     const onError = (error: any) => {
