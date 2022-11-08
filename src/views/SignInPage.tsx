@@ -1,11 +1,12 @@
 import axios from "axios";
 import { defineComponent, PropType, reactive, ref } from "vue";
+import { useBool } from "../hooks/useBool";
 import { MainLayout } from "../layouts/MainLayout";
 import { Button } from "../shared/Button";
 import { Form, FormItem } from "../shared/Form";
-import { http } from "../shared/HttpClient";
+import { http, HttpClient } from "../shared/HttpClient";
 import { Icon } from "../shared/Icon";
-import { validate } from "../shared/validate";
+import { validate, hasError } from "../shared/validate";
 import s from "./SignInPage.module.scss";
 export const SignInPage = defineComponent({
   props: {
@@ -23,7 +24,13 @@ export const SignInPage = defineComponent({
       code: [],
     });
     const refValidationCode = ref<any>();
-    const onSubmit = (e: Event) => {
+    const {
+      ref: refDisabled,
+      toggle,
+      on: disabled,
+      off: enabled,
+    } = useBool(false);
+    const onSubmit = async (e: Event) => {
       e.preventDefault();
       Object.assign(errors, {
         email: [],
@@ -42,6 +49,9 @@ export const SignInPage = defineComponent({
           { key: "code", type: "required", message: "必填" },
         ])
       );
+      if (!hasError(errors)) {
+        const response = await http.post("/session", formData);
+      }
     };
     const onError = (error: any) => {
       if (error.response.status === 422) {
@@ -51,6 +61,7 @@ export const SignInPage = defineComponent({
       throw error;
     };
     const onClickSendValidationCode = async () => {
+      disabled();
       const response = await http
         .post("/validation_codes", {
           email: formData.email,
@@ -58,7 +69,8 @@ export const SignInPage = defineComponent({
         .catch((error) => {
           //失败
           onError(error);
-        });
+        })
+        .finally(enabled);
       //成功
       refValidationCode.value?.startCount();
     };
@@ -90,9 +102,10 @@ export const SignInPage = defineComponent({
                   onClick={onClickSendValidationCode}
                   ref={refValidationCode}
                   countFrom={1}
+                  disabled={refDisabled.value}
                 />
                 <FormItem style={{ paddingTop: 64 + "px" }}>
-                  <Button>登录</Button>
+                  <Button type="submit">登录</Button>
                 </FormItem>
               </Form>
             </div>
