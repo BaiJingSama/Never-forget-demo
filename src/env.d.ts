@@ -14,3 +14,12 @@ type JSONValue =
   | number
   | JSONValue[]
   | Record<string, JSONValue>;
+
+type Tag = {
+  id: number;
+  user_id: number;
+  name: string;
+  sign: string;
+  deleted_at: string | null;
+  kind: "expenses" | "income";
+};

@@ -56,7 +56,9 @@ export const SignInPage = defineComponent({
       );
       if (!hasError(errors)) {
         const response = await http
-          .post<{ jwt: string }>("/session", formData)
+          .post<{ jwt: string }>("/session", formData, {
+            params: { _mock: "session" },
+          })
           .catch(onError);
         localStorage.setItem("jwt", response.data.jwt);
         //下方代码为保存到查询参数里
