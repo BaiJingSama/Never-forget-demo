@@ -1,13 +1,33 @@
+import { fetchMe, mePromise } from "./shared/me";
 import { history } from "./shared/history";
 import { createApp } from "vue";
 import { App } from "./App";
 import { createRouter } from "vue-router";
 import { routes } from "./config/routes";
 import "@svgstore";
+import { http } from "./shared/HttpClient";
 
 const router = createRouter({
   history,
   routes,
+});
+
+fetchMe();
+
+router.beforeEach(async (to, from) => {
+  if (
+    to.path === "/" ||
+    to.path.startsWith("/welcome") ||
+    to.path.startsWith("/sign_in")
+  ) {
+    return true;
+  } else {
+    const path = await mePromise!.then(
+      () => true,
+      () => "/sign_in?return_to=" + to.path
+    );
+    return path;
+  }
 });
 
 const app = createApp(App);
