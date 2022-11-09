@@ -73,15 +73,27 @@ export class HttpClient {
 
 export const http = new HttpClient("/api/v1");
 
+http.instance.interceptors.request.use((config) => {
+  const jwt = localStorage.getItem("jwt");
+  if (jwt) {
+    config.headers!.Authorization = `Bearer ${jwt}`;
+  }
+  return config;
+});
+
+// request.use也可以接受两个参数，但一般只用第一个
+// config是请求相关的所有配置
+// 判断如果jwt存在就把jwt加到响应头里
+
 http.instance.interceptors.response.use(
   (response) => {
     return response;
   },
   (error) => {
-    if(error.response){
-      const axiosError = error as AxiosError
-      if(axiosError.response?.status === 429){
-        alert('请求过于频繁')
+    if (error.response) {
+      const axiosError = error as AxiosError;
+      if (axiosError.response?.status === 429) {
+        alert("请求过于频繁");
       }
     }
     throw error;
