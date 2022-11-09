@@ -16,17 +16,17 @@ fetchMe();
 
 router.beforeEach(async (to, from) => {
   if (
-    to.path === "/" ||
+    ["/", "/start"].includes(to.path) ||
     to.path.startsWith("/welcome") ||
     to.path.startsWith("/sign_in")
   ) {
     return true;
   } else {
-    const path = await mePromise!.then(
+    //如果return promise就不用写await
+    return mePromise!.then(
       () => true,
       () => "/sign_in?return_to=" + to.path
     );
-    return path;
   }
 });
 
