@@ -1,12 +1,15 @@
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
-import { JsonOptions } from "vite";
-type JSONValue =
-  | string
-  | number
-  | null
-  | boolean
-  | JSONValue[]
-  | { [key: string]: JSONValue };
+import axios, {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+} from "axios";
+import { mockSession } from "../mock/mock";
+
+type GetConfig = Omit<AxiosRequestConfig, "params" | "url" | "method">;
+type PostConfig = Omit<AxiosRequestConfig, "url" | "data" | "method">;
+type PatchConfig = Omit<AxiosRequestConfig, "url" | "data">;
+type DeleteConfig = Omit<AxiosRequestConfig, "params">;
 
 export class HttpClient {
   instance: AxiosInstance;
@@ -19,8 +22,8 @@ export class HttpClient {
   get<R = unknown>(
     // R表示get请求返回的response的data的类型，可以传可以不传
     url: string,
-    query?: Record<string, string>,
-    config?: Omit<AxiosRequestConfig, "params" | "url" | "data">
+    query?: Record<string, JSONValue>,
+    config?: GetConfig
     // Omit从第一个参数中删除第二个参数（属性名）
   ) {
     return this.instance.request<R>({
@@ -34,7 +37,7 @@ export class HttpClient {
   post<R = unknown>(
     url: string,
     data?: Record<string, JSONValue>,
-    config?: Omit<AxiosRequestConfig, "url" | "data" | "method">
+    config?: PostConfig
   ) {
     return this.instance.request<R>({
       ...config,
@@ -47,7 +50,7 @@ export class HttpClient {
   patch<R = unknown>(
     url: string,
     data?: Record<string, JSONValue>,
-    config?: Omit<AxiosRequestConfig, "url" | "data" | "method">
+    config?: PatchConfig
   ) {
     return this.instance.request<R>({
       ...config,
@@ -59,17 +62,33 @@ export class HttpClient {
   // destroy
   delete<R = unknown>(
     url: string,
-    data?: Record<string, JSONValue>,
-    config?: Omit<AxiosRequestConfig, "params">
+    query?: Record<string, string>,
+    config?: DeleteConfig
   ) {
     return this.instance.request<R>({
       ...config,
       url,
-      data,
+      params: query,
       method: "delete",
     });
   }
 }
+
+const mock = (response: AxiosResponse) => {
+  if (
+    location.hostname !== "localhost" &&
+    location.hostname !== "127.0.0.1" &&
+    location.hostname !== "192.168.3.57"
+  ) {
+    return false;
+  }
+  switch (response.config?.params?._mock) {
+    case "session":
+      [response.status, response.data] = mockSession(response.config);
+      return true;
+  }
+  return false;
+};
 
 export const http = new HttpClient("/api/v1");
 
@@ -87,17 +106,27 @@ http.instance.interceptors.request.use((config) => {
 
 http.instance.interceptors.response.use(
   (response) => {
+    mock(response);
     return response;
   },
+  (error) => {
+    if (mock(error.response)) {
+      return error.response;
+    } else {
+      throw error;
+    }
+  }
+);
+
+http.instance.interceptors.response.use(
+  (response) => response,
   (error) => {
     if (error.response) {
       const axiosError = error as AxiosError;
       if (axiosError.response?.status === 429) {
-        alert("请求过于频繁");
+        alert("你太频繁了");
       }
     }
     throw error;
-    // 上下二选一，都是捕获错误，必须要有的，不然就会认为成功了
-    // return Promise.reject(error)
   }
 );
