@@ -3,6 +3,7 @@ import { Dialog, Toast } from "vant";
 import { defineComponent, PropType, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { MainLayout } from "../../layouts/MainLayout";
+import { BackIcon } from "../../shared/BackIcon";
 import { http } from "../../shared/HttpClient";
 import { Icon } from "../../shared/Icon";
 import { Tab, Tabs } from "../../shared/Tabs";
@@ -45,7 +46,7 @@ export const ItemCreate = defineComponent({
       <MainLayout class={s.layout}>
         {{
           title: () => "记一笔",
-          icon: () => <Icon name="left" class={s.navIcon} />,
+          icon: () => <BackIcon class={s.navIcon} />,
           default: () => (
             <>
               <div class={s.wrapper}>

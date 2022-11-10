@@ -6,6 +6,7 @@ import s from "./Tag.module.scss";
 import { EmojiSelect } from "../../shared/EmojiSelect";
 import { Rules, validate } from "../../shared/validate";
 import { TagForm } from "./TagForm";
+import { BackIcon } from "../../shared/BackIcon";
 export const TagCreate = defineComponent({
   props: {
     modelValue: {
@@ -40,7 +41,7 @@ export const TagCreate = defineComponent({
       <MainLayout>
         {{
           title: () => "新建标签",
-          icon: () => <Icon name="left" onClick={() => {}} />,
+          icon: () => <BackIcon />,
           default: () => (
             <>
               <TagForm />
