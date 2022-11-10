@@ -5,6 +5,35 @@ type Mock = (config: AxiosRequestConfig) => [number, any];
 
 faker.setLocale("zh_CN");
 
+export const mockItemCreate: Mock = (config) => {
+  return [
+    200,
+    {
+      resource: {
+        id: 16286,
+        user_id: 9906,
+        amount: 9900,
+        note: null,
+        tag_ids: [26791],
+        happen_at: "2020-10-30T00:00:00.000+08:00",
+        created_at: "2022-10-15T13:33:03.225+08:00",
+        updated_at: "2022-10-15T13:33:03.225+08:00",
+        kind: "expenses",
+        deleted_at: null,
+      },
+    },
+  ];
+  // return [
+  //   422,
+  //   {
+  //     errors: {
+  //       tags_id: ["必须选择标签"],
+  //       amount: ["金额不能为0"],
+  //     },
+  //   },
+  // ];
+};
+
 export const mockSession: Mock = (config) => {
   return [
     200,
