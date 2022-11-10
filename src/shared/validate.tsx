@@ -50,7 +50,7 @@ export function hasError(errors: Record<string, string[]>) {
   // 上下两种都行
   let result = false;
   for (let key in errors) {
-    if (errors[key].length > 0) {
+    if (errors[key]?.length > 0) {
       result = true;
       break;
     }

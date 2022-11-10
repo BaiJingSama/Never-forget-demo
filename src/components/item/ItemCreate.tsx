@@ -58,7 +58,6 @@ export const ItemCreate = defineComponent({
                   class={s.tabs}
                 >
                   <Tab name="支出">
-                    <div>{JSON.stringify(formData)}</div>
                     <Tags kind="expenses" v-model:selected={formData.tags_id} />
                   </Tab>
                   <Tab name="收入">
