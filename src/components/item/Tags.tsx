@@ -1,4 +1,4 @@
-import { defineComponent, PropType } from "vue";
+import { defineComponent, PropType, ref } from "vue";
 import { RouterLink } from "vue-router";
 import { Button } from "../../shared/Button";
 import { http } from "../../shared/HttpClient";
@@ -25,9 +25,35 @@ export const Tags = defineComponent({
     const onSelect = (tag: Tag) => {
       context.emit("update:selected", tag.id);
     };
+    const timer = ref<number>();
+    const currentTag = ref<HTMLDivElement>();
+    const onLongPress = () => {
+      console.log("长按");
+    };
+    const onTouchStart = (e: TouchEvent) => {
+      currentTag.value = e.currentTarget as HTMLDivElement;
+      timer.value = setTimeout(() => {
+        onLongPress();
+      }, 1000);
+    };
+    const onTouchEnd = (e: TouchEvent) => {
+      clearTimeout(timer.value);
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      const pointedElement = document.elementFromPoint(
+        e.touches[0].clientX,
+        e.touches[0].clientY
+      );
+      if (
+        currentTag.value !== pointedElement &&
+        currentTag.value?.contains(pointedElement) === false
+      ) {
+        clearTimeout(timer.value);
+      }
+    };
     return () => (
       <>
-        <div class={s.tags_wrapper}>
+        <div class={s.tags_wrapper} onTouchmove={onTouchMove}>
           <RouterLink to={`/tags/create?kind=${props.kind}`} class={s.tag}>
             <div class={s.sign}>
               <Icon name="add" class={s.createTag} />
@@ -40,6 +66,8 @@ export const Tags = defineComponent({
               onClick={() => {
                 onSelect(tag);
               }}
+              onTouchstart={onTouchStart}
+              onTouchend={onTouchEnd}
             >
               <div class={s.sign}>{tag.sign}</div>
               <div class={s.name}>{tag.name}</div>
