@@ -21,7 +21,7 @@ type Tag = {
   name: string;
   sign: string;
   deleted_at: string | null;
-  kind: "expenses" | "income";
+  kind: string;
 };
 
 type Resources<T = any> = {
@@ -34,7 +34,7 @@ type Resources<T = any> = {
 };
 
 type Resource<T> = {
-  resources: T;
+  resource: T;
 };
 
 type Item = {

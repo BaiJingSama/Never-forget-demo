@@ -5,6 +5,18 @@ type Mock = (config: AxiosRequestConfig) => [number, any];
 
 faker.setLocale("zh_CN");
 
+export const mockTagShow: Mock = (config) => {
+  const createTag = (attrs?: any) => ({
+    id: createId(),
+    name: faker.lorem.word(),
+    sign: faker.internet.emoji(),
+    kind: "expenses",
+    ...attrs,
+  });
+
+  return [200, { resource: createTag() }];
+};
+
 export const mockItemCreate: Mock = (config) => {
   return [
     200,
@@ -43,15 +55,17 @@ export const mockSession: Mock = (config) => {
   ];
 };
 
+let id = 0;
+const createId = () => {
+  id += 1;
+  return id;
+};
+
 export const mockTagIndex: Mock = (config) => {
   const { kind, page } = config.params;
   const per_page = 25;
   const count = 26;
-  let id = 0;
-  const createId = () => {
-    id += 1;
-    return id;
-  };
+
   const createPager = (page = 1) => ({
     page,
     per_page,
