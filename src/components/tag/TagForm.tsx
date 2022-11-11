@@ -1,6 +1,5 @@
 import { defineComponent, onMounted, PropType, reactive, toRaw } from "vue";
 import { Button } from "../../shared/Button";
-import { EmojiSelect } from "../../shared/EmojiSelect";
 import { hasError, Rules, validate } from "../../shared/validate";
 import { Form, FormItem } from "../../shared/Form";
 import s from "./Tag.module.scss";
