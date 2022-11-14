@@ -41,7 +41,7 @@ type Item = {
   id: number;
   user_id: number;
   amount: number;
-  tag_ids: number[];
+  tags_id: number[];
   happen_at: string;
   kind: expenses | income;
 };
