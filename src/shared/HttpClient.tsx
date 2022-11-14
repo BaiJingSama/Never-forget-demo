@@ -85,11 +85,14 @@ const mock = (response: AxiosResponse) => {
   if (
     location.hostname !== "localhost" &&
     location.hostname !== "127.0.0.1" &&
-    location.hostname !== "192.168.1.3"
+    location.hostname !== "192.168.1.2"
   ) {
     return false;
   }
   switch (response.config?.params?._mock) {
+    case "itemIndex":
+      [response.status, response.data] = mockItemIndex(response.config);
+      return true;
     case "tagIndex":
       [response.status, response.data] = mockTagIndex(response.config);
       return true;
@@ -104,9 +107,6 @@ const mock = (response: AxiosResponse) => {
       return true;
     case "tagEdit":
       [response.status, response.data] = mockTagEdit(response.config);
-      return true;
-    case "itemIndex":
-      [response.status, response.data] = mockItemIndex(response.config);
       return true;
   }
   return false;

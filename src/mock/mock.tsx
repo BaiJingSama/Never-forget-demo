@@ -15,12 +15,12 @@ export const mockItemIndex: Mock = (config) => {
   const { kind, page } = config.params;
   const per_page = 25;
   const count = 26;
-  const createPaper = (page = 1) => ({
+  const createPager = (page = 1) => ({
     page,
     per_page,
     count,
   });
-  const createItem = (n = 1, attrs?: any) =>
+  const createItem = (n = 1) =>
     Array.from({ length: n }).map(() => ({
       id: createId(),
       user_id: createId(),
@@ -31,7 +31,8 @@ export const mockItemIndex: Mock = (config) => {
     }));
   const createBody = (n = 1, attrs?: any) => ({
     resources: createItem(n),
-    pager: createPaper(page),
+    pager: createPager(page),
+    ...attrs,
   });
   if (!page || page === 1) {
     return [200, createBody(25)];
