@@ -4,6 +4,8 @@ import { TimeTabLayout } from "../layouts/TimeTabLayout";
 import s from "./StatisticsPage.module.scss";
 export const StatisticsPage = defineComponent({
   setup: (props, context) => {
-    return () => <TimeTabLayout component={Charts} />;
+    return () => (
+      <TimeTabLayout rerenderOnSwitchTab={true} component={Charts} />
+    );
   },
 });
