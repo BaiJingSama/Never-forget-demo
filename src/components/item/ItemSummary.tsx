@@ -1,5 +1,6 @@
 import { defineComponent, onMounted, PropType, ref } from "vue";
 import { Button } from "../../shared/Button";
+import { Datetime } from "../../shared/DateTime";
 import { FloatButton } from "../../shared/FloatButton";
 import { http } from "../../shared/HttpClient";
 import { Money } from "../../shared/Money";
@@ -59,7 +60,7 @@ export const ItemSummary = defineComponent({
               {items.value.map((item) => (
                 <li>
                   <div class={s.sign}>
-                    <span>1</span>
+                    <span>{item.tags_id}</span>
                   </div>
                   <div class={s.text}>
                     <div class={s.tagAndAmount}>
@@ -68,7 +69,9 @@ export const ItemSummary = defineComponent({
                         ￥<Money value={item.amount} />
                       </span>
                     </div>
-                    <div class={s.time}>{item.happen_at}</div>
+                    <div class={s.time}>
+                      <Datetime value={item.happen_at} />
+                    </div>
                   </div>
                 </li>
               ))}
