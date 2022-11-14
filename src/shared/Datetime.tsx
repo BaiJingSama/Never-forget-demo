@@ -8,7 +8,7 @@ export const Datetime = defineComponent({
     },
     format: {
       type: String,
-      default: "YYYY-MM-DD HH:mm:ss",
+      default: "YYYY年MM月DD日 HH:mm:ss",
     },
   },
   setup: (props, context) => {
