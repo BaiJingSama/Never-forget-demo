@@ -44,9 +44,7 @@ export const Charts = defineComponent({
       );
 
       data1.value = response.data.groups;
-      console.log(response.data);
     });
-    console.log(betterData1);
 
     return () => (
       <div class={s.wrapper}>
