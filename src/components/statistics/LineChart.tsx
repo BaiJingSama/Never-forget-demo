@@ -1,35 +1,86 @@
-import { defineComponent, PropType, ref,onMounted } from "vue";
+import { defineComponent, PropType, ref, onMounted, watch } from "vue";
 import s from "./LineChart.module.scss";
 import * as echarts from "echarts";
+import { Time } from "../../shared/time";
+import { getMoney } from "../../shared/Money";
 export const LineChart = defineComponent({
+  props: {
+    data: {
+      type: Array as PropType<[string, number][]>,
+      required: true,
+    },
+  },
   setup: (props, context) => {
-    const refDiv = ref<HTMLDivElement>()
+    const refDiv = ref<HTMLDivElement>();
+    const refChart = ref<echarts.ECharts>();
+
+    const echartsOption = {
+      tooltip: {
+        show: true,
+        trigger: "axis",
+        formatter: ([item]: any) => {
+          const [x, y] = item.data;
+          return `${new Time(new Date(x)).format(
+            "YYYY年MM月DD日"
+          )} ￥${getMoney(y)}`;
+        },
+      },
+      grid: [{ left: 16, top: 10, right: 16, bottom: 20 }],
+      xAxis: {
+        type: "time",
+        boundaryGap: ["3%", "0%"],
+        axisLabel: {
+          formatter: (value: string) =>
+            new Time(new Date(value)).format("MM-DD"),
+        },
+        axisTick: {
+          alignWithLabel: true,
+        },
+      },
+      yAxis: {
+        show: true,
+        type: "value",
+        splitLine: {
+          show: true,
+          lineStyle: {
+            type: "dashed",
+          },
+        },
+        axisLabel: {
+          show: false,
+        },
+      },
+    };
+
     onMounted(() => {
-      if (refDiv.value) {
-        var myChart = echarts.init(refDiv.value);
-        // 基于准备好的dom，初始化echarts实例
-  
-        // 绘制图表
-        const option = {
-          grid: [{ left: 0, top: 0, right: 0, bottom: 20 }],
-          xAxis: {
-            type: "category",
-            data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      if (refDiv.value === undefined) {
+        return;
+      }
+      // 基于准备好的dom，初始化echarts实例
+      refChart.value = echarts.init(refDiv.value);
+      // 绘制图表
+      refChart.value.setOption({
+        ...echartsOption,
+        series: [
+          {
+            data: props.data,
+            type: "line",
           },
-          yAxis: {
-            type: "value",
-          },
+        ],
+      });
+    });
+    watch(
+      () => props.data,
+      () => {
+        refChart.value?.setOption({
           series: [
             {
-              data: [150, 230, 224, 218, 135, 147, 260],
-              type: "line",
+              data: props.data,
             },
           ],
-        };
-  
-        myChart.setOption(option);
+        });
       }
-    });
+    );
     return () => <div class={s.wrapper} ref={refDiv}></div>;
   },
 });
