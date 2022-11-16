@@ -1,0 +1,17 @@
+.text {
+  text-align: center;
+  font-size: 32px;
+}
+
+.pig {
+  width: 128px;
+  height: 128px;
+  &_wrapper {
+    padding: 120px 0;
+  }
+}
+
+.navIcon {
+  width: 32px;
+  height: 32px;
+}

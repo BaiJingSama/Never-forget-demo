@@ -10,7 +10,7 @@ export const Icon = defineComponent({
       required: true,
     },
     onClick: {
-      type: Function as PropType<(e: TouchEvent) => void>,
+      type: Function as PropType<() => void>,
     },
   },
   setup: (props, context) => {
