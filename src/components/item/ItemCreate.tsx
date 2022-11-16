@@ -1,15 +1,15 @@
-import { AxiosError } from "axios";
-import { Dialog, Toast } from "vant";
-import { defineComponent, PropType, reactive, ref } from "vue";
-import { useRouter } from "vue-router";
-import { MainLayout } from "../../layouts/MainLayout";
-import { BackIcon } from "../../shared/BackIcon";
-import { http } from "../../shared/HttpClient";
-import { Icon } from "../../shared/Icon";
-import { Tab, Tabs } from "../../shared/Tabs";
-import { InputPad } from "./InputPad";
-import s from "./ItemCreate.module.scss";
-import { Tags } from "./Tags";
+import { AxiosError } from 'axios'
+import { Dialog, Toast } from 'vant'
+import { defineComponent, PropType, reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { MainLayout } from '../../layouts/MainLayout'
+import { BackIcon } from '../../shared/BackIcon'
+import { http } from '../../shared/HttpClient'
+import { Icon } from '../../shared/Icon'
+import { Tab, Tabs } from '../../shared/Tabs'
+import { InputPad } from './InputPad'
+import s from './ItemCreate.module.scss'
+import { Tags } from './Tags'
 export const ItemCreate = defineComponent({
   props: {
     name: {
@@ -18,34 +18,34 @@ export const ItemCreate = defineComponent({
   },
   setup: (props, context) => {
     const formData = reactive({
-      kind: "支出",
+      kind: '支出',
       tags_id: [],
       amount: 0,
       happen_at: new Date().toISOString(),
-    });
-    const router = useRouter();
+    })
+    const router = useRouter()
     const onError = (error: AxiosError<ResourceError>) => {
       if (error.response?.status === 422) {
         Dialog.alert({
-          title: "错误",
-          message: Object.values(error.response.data.errors).join("\n"),
-        });
+          title: '错误',
+          message: Object.values(error.response.data.errors).join('\n'),
+        })
       }
-      throw error;
-    };
+      throw error
+    }
     const onSubmit = async () => {
       const response = await http
-        .post<Resource<Item>>("/items", formData, {
-          params: { _mock: "itemCreate" },
+        .post<Resource<Item>>('/items', formData, {
+          _mock: 'itemCreate',
         })
-        .catch(onError);
-      Toast.success("记账成功");
-      router.push("/items");
-    };
+        .catch(onError)
+      Toast.success('记账成功')
+      router.push('/items')
+    }
     return () => (
       <MainLayout class={s.layout}>
         {{
-          title: () => "记一笔",
+          title: () => '记一笔',
           icon: () => <BackIcon class={s.navIcon} />,
           default: () => (
             <>
@@ -76,6 +76,6 @@ export const ItemCreate = defineComponent({
           ),
         }}
       </MainLayout>
-    );
+    )
   },
-});
+})

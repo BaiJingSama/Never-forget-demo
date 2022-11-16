@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import { Toast } from 'vant'
 import {
   mockItemCreate,
   mockItemIndex,
@@ -7,7 +8,7 @@ import {
   mockSession,
   mockTagEdit,
   mockTagIndex,
-  mockTagShow
+  mockTagShow,
 } from '../mock/mock'
 
 type GetConfig = Omit<AxiosRequestConfig, 'params' | 'url' | 'method'>
@@ -19,7 +20,7 @@ export class HttpClient {
   instance: AxiosInstance
   constructor(baseURL: string) {
     this.instance = axios.create({
-      baseURL
+      baseURL,
     })
   }
   // read
@@ -27,14 +28,14 @@ export class HttpClient {
     // R表示get请求返回的response的data的类型，可以传可以不传
     url: string,
     query?: Record<string, JSONValue>,
-    config?: GetConfig
+    config?: GetConfig,
     // Omit从第一个参数中删除第二个参数（属性名）
   ) {
     return this.instance.request<R>({
       ...config,
       url: url,
       params: query,
-      method: 'get'
+      method: 'get',
     })
   }
   // create
@@ -43,7 +44,7 @@ export class HttpClient {
       ...config,
       url,
       data,
-      method: 'post'
+      method: 'post',
     })
   }
   // update
@@ -52,7 +53,7 @@ export class HttpClient {
       ...config,
       url,
       data,
-      method: 'patch'
+      method: 'patch',
     })
   }
   // destroy
@@ -61,7 +62,7 @@ export class HttpClient {
       ...config,
       url,
       params: query,
-      method: 'delete'
+      method: 'delete',
     })
   }
 }
@@ -70,7 +71,7 @@ const mock = (response: AxiosResponse) => {
   if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1' && location.hostname !== '192.168.1.2') {
     return false
   }
-  switch (response.config?.params?._mock) {
+  switch (response.config?._mock) {
     case 'itemIndex':
       ;[response.status, response.data] = mockItemIndex(response.config)
       return true
@@ -106,8 +107,30 @@ http.instance.interceptors.request.use((config) => {
   if (jwt) {
     config.headers!.Authorization = `Bearer ${jwt}`
   }
+  if (config._autoLoading === true) {
+    Toast.loading({
+      message: '加载中...',
+      forbidClick: true,
+      duration: 0,
+    })
+  }
   return config
 })
+
+http.instance.interceptors.response.use(
+  (response) => {
+    if (response.config._autoLoading === true) {
+      Toast.clear()
+    }
+    return response
+  },
+  (error) => {
+    if (error.response?.config._autoLoading === true) {
+      Toast.clear()
+    }
+    throw error
+  },
+)
 
 // request.use也可以接受两个参数，但一般只用第一个
 // config是请求相关的所有配置
@@ -129,7 +152,7 @@ http.instance.interceptors.response.use(
     } else {
       return error.response
     }
-  }
+  },
 )
 
 http.instance.interceptors.response.use(
@@ -142,5 +165,5 @@ http.instance.interceptors.response.use(
       }
     }
     throw error
-  }
+  },
 )

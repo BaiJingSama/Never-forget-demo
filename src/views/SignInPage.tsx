@@ -1,17 +1,17 @@
-import axios from "axios";
-import { defineComponent, PropType, reactive, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { useBool } from "../hooks/useBool";
-import { MainLayout } from "../layouts/MainLayout";
-import { BackIcon } from "../shared/BackIcon";
-import { Button } from "../shared/Button";
-import { Form, FormItem } from "../shared/Form";
-import { history } from "../shared/history";
-import { http, HttpClient } from "../shared/HttpClient";
-import { Icon } from "../shared/Icon";
-import { refreshMe } from "../shared/me";
-import { validate, hasError } from "../shared/validate";
-import s from "./SignInPage.module.scss";
+import axios from 'axios'
+import { defineComponent, PropType, reactive, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useBool } from '../hooks/useBool'
+import { MainLayout } from '../layouts/MainLayout'
+import { BackIcon } from '../shared/BackIcon'
+import { Button } from '../shared/Button'
+import { Form, FormItem } from '../shared/Form'
+import { history } from '../shared/history'
+import { http, HttpClient } from '../shared/HttpClient'
+import { Icon } from '../shared/Icon'
+import { refreshMe } from '../shared/me'
+import { validate, hasError } from '../shared/validate'
+import s from './SignInPage.module.scss'
 export const SignInPage = defineComponent({
   props: {
     name: {
@@ -20,78 +20,77 @@ export const SignInPage = defineComponent({
   },
   setup: (props, context) => {
     const formData = reactive({
-      email: "1303802862@qq.com",
-      code: "",
-    });
+      email: '1303802862@qq.com',
+      code: '',
+    })
     const errors = reactive({
       email: [],
       code: [],
-    });
-    const refValidationCode = ref<any>();
-    const {
-      ref: refDisabled,
-      toggle,
-      on: disabled,
-      off: enabled,
-    } = useBool(false);
-    const router = useRouter();
-    const route = useRoute();
+    })
+    const refValidationCode = ref<any>()
+    const { ref: refDisabled, toggle, on: disabled, off: enabled } = useBool(false)
+    const router = useRouter()
+    const route = useRoute()
     const onSubmit = async (e: Event) => {
-      e.preventDefault();
+      e.preventDefault()
       Object.assign(errors, {
         email: [],
         code: [],
-      });
+      })
       Object.assign(
         errors,
         validate(formData, [
-          { key: "email", type: "required", message: "必填" },
+          { key: 'email', type: 'required', message: '必填' },
           {
-            key: "email",
-            type: "pattern",
+            key: 'email',
+            type: 'pattern',
             regex: /.+@.+/,
-            message: "邮箱地址不合法",
+            message: '邮箱地址不合法',
           },
-          { key: "code", type: "required", message: "必填" },
-        ])
-      );
+          { key: 'code', type: 'required', message: '必填' },
+        ]),
+      )
       if (!hasError(errors)) {
-        const response = await http
-          .post<{ jwt: string }>("/session", formData)
-          .catch(onError);
-        localStorage.setItem("jwt", response.data.jwt);
+        const response = await http.post<{ jwt: string }>('/session', formData).catch(onError)
+        localStorage.setItem('jwt', response.data.jwt)
         //下方代码为保存到查询参数里
         // router.push('/sign_in?return_to=' + encodeURIComponent(route.fullPath))
-        const returnTo = route.query.return_to?.toString();
-        refreshMe();
-        router.push(returnTo || "/");
+        const returnTo = route.query.return_to?.toString()
+        refreshMe()
+        router.push(returnTo || '/')
       }
-    };
+    }
     const onError = (error: any) => {
       if (error.response.status === 422) {
-        Object.assign(errors, error.response.data.errors);
-        console.log([errors]);
+        Object.assign(errors, error.response.data.errors)
+        console.log([errors])
       }
-      throw error;
-    };
+      throw error
+    }
     const onClickSendValidationCode = async () => {
-      disabled();
+      disabled()
       const response = await http
-        .post("/validation_codes", {
-          email: formData.email,
-        })
+        .post(
+          '/validation_codes',
+          {
+            email: formData.email,
+          },
+          {
+            _autoLoading: true,
+          },
+        )
         .catch((error) => {
           //失败
-          onError(error);
+          onError(error)
         })
-        .finally(enabled);
+        .finally(enabled)
       //成功
-      refValidationCode.value?.startCount();
-    };
+      refValidationCode.value?.startCount()
+    }
     return () => (
       <MainLayout>
         {{
-          title: () => "登录",
+          title: () => '登录',
           icon: () => <BackIcon />,
           default: () => (
             <div class={s.wrapper}>
@@ -118,7 +117,7 @@ export const SignInPage = defineComponent({
                   countFrom={1}
                   disabled={refDisabled.value}
                 />
-                <FormItem style={{ paddingTop: 64 + "px" }}>
+                <FormItem style={{ paddingTop: 64 + 'px' }}>
                   <Button type="submit">登录</Button>
                 </FormItem>
               </Form>
@@ -126,6 +125,6 @@ export const SignInPage = defineComponent({
           ),
         }}
       </MainLayout>
-    );
+    )
   },
-});
+})

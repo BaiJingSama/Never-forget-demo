@@ -28,19 +28,30 @@ export const Charts = defineComponent({
     const category = ref('expenses')
     const kind = ref('expenses')
     const data1 = ref<Data1>([])
+    const data2 = ref<Data2>([])
     const fetchData1 = async () => {
-      const response = await http.get<{ groups: Data1; summary: number }>('items/summary', {
-        happen_after: props.startDate,
-        happen_end: props.endDate,
-        kind: kind.value,
-        group_by: 'happen_at',
-        _mock: 'itemSummary',
-      })
+      const response = await http.get<{ groups: Data1; summary: number }>(
+        'items/summary',
+        {
+          happen_after: props.startDate,
+          happen_end: props.endDate,
+          kind: kind.value,
+          group_by: 'happen_at',
+        },
+        {
+          _mock: 'itemSummary',
+        },
+      )
 
       data1.value = response.data.groups
     }
 
     watch(() => kind.value, fetchData1)
+
+    //data1 折线图
+    onMounted(() => {
+      fetchData1()
+    })
 
     const betterData1 = computed<[string, number][]>(() => {
       if (!props.startDate || !props.endDate) {
@@ -55,32 +66,33 @@ export const Charts = defineComponent({
         return [new Date(time).toISOString(), amount]
       })
     })
-    //data1 折线图
-    onMounted(() => {
-      fetchData1()
-    })
 
     // data2 饼图
-    const data2 = ref<Data2>([])
+    const fetchData2 = async () => {
+      const response = await http.get<{ groups: Data2; summary: number }>(
+        'items/summary',
+        {
+          happen_after: props.startDate,
+          happen_end: props.endDate,
+          kind: kind.value,
+          group_by: 'tag_id',
+        },
+        {
+          _mock: 'itemSummary',
+        },
+      )
+      data2.value = response.data.groups
+    }
+    onMounted(fetchData2)
+
+    watch(() => kind.value, fetchData2)
+
     const betterData2 = computed<{ name: string; value: number }[]>(() =>
       data2.value.map((item) => ({
         name: item.tag.name,
         value: item.amount,
       })),
     )
-
-    const fetchData2 = async () => {
-      const response = await http.get<{ groups: Data2; summary: number }>('items/summary', {
-        happen_after: props.startDate,
-        happen_end: props.endDate,
-        kind: kind.value,
-        group_by: 'tag_id',
-        _mock: 'itemSummary',
-      })
-      data2.value = response.data.groups
-    }
-    onMounted(fetchData2)
-    watch(() => kind.value, fetchData2)
 
     // data3
     const betterData3 = computed<{ tag: Tag; amount: number; percent: number }[]>(() => {
