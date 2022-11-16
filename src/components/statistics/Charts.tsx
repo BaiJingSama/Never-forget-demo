@@ -41,7 +41,7 @@ export const Charts = defineComponent({
         return [new Date(time).toISOString(), amount]
       })
     })
-
+    //data1 折线图
     onMounted(async () => {
       const response = await http.get<{ groups: Data1; summary: number }>('items/summary', {
         happen_after: props.startDate,
@@ -55,7 +55,7 @@ export const Charts = defineComponent({
       console.log(data1.value)
     })
 
-    // data2
+    // data2 饼图
     const data2 = ref<Data2>([])
     const betterData2 = computed<{ name: string; value: number }[]>(() =>
       data2.value.map((item) => ({
@@ -63,6 +63,15 @@ export const Charts = defineComponent({
         value: item.amount,
       })),
     )
+
+    // data3
+    const betterData3 = computed<{ tag: Tag; amount: number; percent: number }[]>(() => {
+      const total = data2.value.reduce((sum, item) => sum + item.amount, 0)
+      return data2.value.map((item) => ({
+        ...item,
+        percent: Math.round((item.amount / total) * 100),
+      }))
+    })
 
     onMounted(async () => {
       const response = await http.get<{ groups: Data2; summary: number }>('items/summary', {
@@ -87,7 +96,7 @@ export const Charts = defineComponent({
         />
         <LineChart data={betterData1.value} />
         <PieChart data={betterData2.value} />
-        <Bars />
+        <Bars data={betterData3.value} />
       </div>
     )
   },
