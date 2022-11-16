@@ -12,7 +12,8 @@ const createId = () => {
 }
 
 export const mockItemSummary: Mock = (config) => {
-  if (config.params.group_by === 'happen_at') {
+  const { group_by, kind } = config.params
+  if (group_by === 'happen_at' && kind === 'expenses') {
     return [
       200,
       {
@@ -24,7 +25,19 @@ export const mockItemSummary: Mock = (config) => {
         summary: 600,
       },
     ]
-  } else {
+  } else if (group_by === 'happen_at' && kind === 'income') {
+    return [
+      200,
+      {
+        groups: [
+          { happen_at: '2022-11-07T00:00:00.000+0800', amount: 400 },
+          { happen_at: '2022-11-08T00:00:00.000+0800', amount: 500 },
+          { happen_at: '2022-11-09T00:00:00.000+0800', amount: 600 },
+        ],
+        summary: 1500,
+      },
+    ]
+  } else if (group_by === 'tag_id' && kind === 'expenses') {
     return [
       200,
       {
@@ -34,6 +47,18 @@ export const mockItemSummary: Mock = (config) => {
           { tag_id: 3, tag: { id: 3, name: '购物', sign: faker.internet.emoji() }, amount: 200 },
         ],
         summary: 600,
+      },
+    ]
+  } else {
+    return [
+      200,
+      {
+        groups: [
+          { tag_id: 1, tag: { id: 1, name: '游戏', sign: faker.internet.emoji() }, amount: 400 },
+          { tag_id: 2, tag: { id: 2, name: '充值', sign: faker.internet.emoji() }, amount: 500 },
+          { tag_id: 3, tag: { id: 3, name: '请客', sign: faker.internet.emoji() }, amount: 600 },
+        ],
+        summary: 1500,
       },
     ]
   }
