@@ -40,6 +40,7 @@ export const Charts = defineComponent({
         },
         {
           _mock: 'itemSummary',
+          _autoLoading: true,
         },
       )
 

@@ -45,9 +45,11 @@ export const TagForm = defineComponent({
         const promise = (await formData.id)
           ? http.patch(`/tags/${formData.id}`, formData, {
               _mock: 'tagEdit',
+              _autoLoading: true,
             })
           : http.post('/tags', formData, {
               _mock: 'tagCreate',
+              _autoLoading: true,
             })
         promise.catch((error) => onFormError(error, (data) => Object.assign(errors, data.errors)))
         Toast.success('更改标签成功')
