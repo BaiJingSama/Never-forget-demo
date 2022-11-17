@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios'
 import { Dialog, Toast } from 'vant'
-import { defineComponent, PropType, reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { defineComponent, onMounted, onUpdated, PropType, reactive, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { MainLayout } from '../../layouts/MainLayout'
 import { BackIcon } from '../../shared/BackIcon'
 import { http } from '../../shared/HttpClient'
@@ -19,6 +19,8 @@ export const ItemCreate = defineComponent({
     },
   },
   setup: (props, context) => {
+    const route = useRoute()
+    const router = useRouter()
     const formData = reactive<Partial<Item>>({
       kind: 'expenses',
       tag_ids: [],
@@ -31,7 +33,19 @@ export const ItemCreate = defineComponent({
       amount: [],
       happen_at: [],
     })
-    const router = useRouter()
+    onMounted(() => {
+      const jwt = localStorage.getItem('jwt')
+      if (!jwt) {
+        router.push(`/sign_in?return_to=${route.fullPath}`)
+      }
+    })
+    onUpdated(() => {
+      const jwt = localStorage.getItem('jwt')
+      if (!jwt) {
+        router.push(`/sign_in?return_to=${route.fullPath}`)
+      }
+    })
+
     const onError = (error: AxiosError<ResourceError>) => {
       if (error.response?.status === 422) {
         Dialog.alert({
@@ -42,6 +56,10 @@ export const ItemCreate = defineComponent({
       throw error
     }
     const onSubmit = async () => {
+      const jwt = localStorage.getItem('jwt')
+      if (!jwt) {
+        router.push(`/sign_in?return_to=${route.fullPath}`)
+      }
       Object.assign(errors, { kind: [], tag_ids: [], amount: [], happen_at: [] })
       Object.assign(
         errors,
