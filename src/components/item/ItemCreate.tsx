@@ -53,9 +53,9 @@ export const ItemCreate = defineComponent({
           { key: 'happen_at', type: 'required', message: '必须填一个日期' },
         ]),
       )
-      if (!hasError(errors)) {
+      if (hasError(errors)) {
         Dialog.alert({
-          title: '错误',
+          title: '出错',
           message: Object.values(errors)
             .filter((i) => i.length > 0)
             .join('\n'),
