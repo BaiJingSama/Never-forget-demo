@@ -1,45 +1,50 @@
 interface FData {
-  [k: string]: string | number | null | undefined | FData;
+  [k: string]: JSONValue
 }
 type Rule<T> = {
-  key: keyof T;
-  message: string;
-} & ({ type: "required" } | { type: "pattern"; regex: RegExp });
+  key: keyof T
+  message: string
+} & ({ type: 'required' } | { type: 'pattern'; regex: RegExp } | { type: 'notEqual'; value: JSONValue })
 
-type Rules<T> = Rule<T>[];
-export type { Rule, Rules, FData };
+type Rules<T> = Rule<T>[]
+export type { Rule, Rules, FData }
 export const validate = <T extends FData>(formData: T, rules: Rules<T>) => {
   type Errors = {
-    [k in keyof T]?: string[];
-  };
+    [k in keyof T]?: string[]
+  }
 
-  const errors: Errors = {};
+  const errors: Errors = {}
 
   rules.map((rule) => {
-    const { key, type, message } = rule;
-    const value = formData[key];
+    const { key, type, message } = rule
+    const value = formData[key]
     switch (type) {
-      case "required":
-        if (value === null || value === undefined || value === "") {
-          errors[key] = errors[key] ?? [];
-          errors[key]?.push(message);
+      case 'required':
+        if (value === null || value === undefined || value === '') {
+          errors[key] = errors[key] ?? []
+          errors[key]?.push(message)
         }
-        break;
-      case "pattern":
+        break
+      case 'pattern':
         if (value && !rule.regex.test(value.toString())) {
-          errors[key] = errors[key] ?? [];
-          errors[key]?.push(message);
+          errors[key] = errors[key] ?? []
+          errors[key]?.push(message)
         }
-        break;
+        break
+      case 'notEqual':
+        if (!isEmpty(value) || value === rule.value) {
+          errors[key] = errors[key] ?? []
+          errors[key]?.push(message)
+        }
       default:
-        return;
+        return
     }
-  });
-  return errors;
-};
+  })
+  return errors
+}
 
 function isEmpty(value: null | undefined | string | number | FData) {
-  return value === null || value === undefined || value === "";
+  return value === null || value === undefined || value === ''
 }
 
 export function hasError(errors: Record<string, string[]>) {
@@ -48,12 +53,12 @@ export function hasError(errors: Record<string, string[]>) {
   //   0
   // );
   // 上下两种都行
-  let result = false;
+  let result = false
   for (let key in errors) {
     if (errors[key]?.length > 0) {
-      result = true;
-      break;
+      result = true
+      break
     }
   }
-  return result;
+  return result
 }

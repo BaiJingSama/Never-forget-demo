@@ -1,7 +1,6 @@
 import { defineComponent, PropType } from 'vue'
 import { Icon, IconName } from './Icon'
 import s from './FloatButton.module.scss'
-import { RouterLink } from 'vue-router'
 
 export const FloatButton = defineComponent({
   props: {

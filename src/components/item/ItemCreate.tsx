@@ -7,9 +7,11 @@ import { BackIcon } from '../../shared/BackIcon'
 import { http } from '../../shared/HttpClient'
 import { Icon } from '../../shared/Icon'
 import { Tab, Tabs } from '../../shared/Tabs'
+import { hasError, validate } from '../../shared/validate'
 import { InputPad } from './InputPad'
 import s from './ItemCreate.module.scss'
 import { Tags } from './Tags'
+
 export const ItemCreate = defineComponent({
   props: {
     name: {
@@ -17,11 +19,17 @@ export const ItemCreate = defineComponent({
     },
   },
   setup: (props, context) => {
-    const formData = reactive({
-      kind: '支出',
-      tags_id: [],
+    const formData = reactive<Partial<Item>>({
+      kind: 'expenses',
+      tag_ids: [],
       amount: 0,
       happen_at: new Date().toISOString(),
+    })
+    const errors = reactive<FormErrors<typeof formData>>({
+      kind: [],
+      tag_ids: [],
+      amount: [],
+      happen_at: [],
     })
     const router = useRouter()
     const onError = (error: AxiosError<ResourceError>) => {
@@ -34,7 +42,27 @@ export const ItemCreate = defineComponent({
       throw error
     }
     const onSubmit = async () => {
-      const response = await http
+      Object.assign(errors, { kind: [], tag_ids: [], amount: [], happen_at: [] })
+      Object.assign(
+        errors,
+        validate(formData, [
+          { key: 'kind', type: 'required', message: '必须选择支出或收入' },
+          { key: 'tag_ids', type: 'required', message: '必须选择一个标签' },
+          { key: 'amount', type: 'required', message: '必须填一个金额' },
+          { key: 'amount', type: 'notEqual', value: 0, message: '金额不能为0' },
+          { key: 'happen_at', type: 'required', message: '必须填一个日期' },
+        ]),
+      )
+      if (!hasError(errors)) {
+        Dialog.alert({
+          title: '错误',
+          message: Object.values(errors)
+            .filter((i) => i.length > 0)
+            .join('\n'),
+        })
+        return
+      }
+      await http
         .post<Resource<Item>>('/items', formData, {
           _mock: 'itemCreate',
           _autoLoading: true,
@@ -58,11 +86,11 @@ export const ItemCreate = defineComponent({
                   // 二选一
                   class={s.tabs}
                 >
-                  <Tab name="支出">
-                    <Tags kind="expenses" v-model:selected={formData.tags_id} />
+                  <Tab name="支出" value="expenses">
+                    <Tags kind="expenses" v-model:selected={formData.tag_ids![0]} />
                   </Tab>
-                  <Tab name="收入">
-                    <Tags kind="income" v-model:selected={formData.tags_id} />
+                  <Tab name="收入" value="income">
+                    <Tags kind="income" v-model:selected={formData.tag_ids![0]} />
                   </Tab>
                 </Tabs>
                 <div class={s.inputPad_wrapper}>

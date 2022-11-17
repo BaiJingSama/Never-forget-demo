@@ -18,12 +18,12 @@ export const TagForm = defineComponent({
       id: undefined,
       name: '',
       sign: '',
-      kind: route.query.kind!.toString(),
+      kind: route.query.kind!.toString() as 'expenses' | 'income',
     })
     if (!route.query.kind) {
       return () => <div>可以自定义错误提示</div>
     }
-    const errors = reactive<{ [k in keyof typeof formData]?: string[] }>({})
+    const errors = reactive<FormErrors<typeof formData>>({})
     const onSubmit = async (e: Event) => {
       e.preventDefault()
       const rules: Rules<typeof formData> = [

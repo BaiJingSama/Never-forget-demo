@@ -1,5 +1,5 @@
-import { defineComponent, PropType } from "vue";
-import s from "./Tabs.module.scss";
+import { defineComponent, PropType } from 'vue'
+import s from './Tabs.module.scss'
 
 export const Tabs = defineComponent({
   props: {
@@ -14,59 +14,56 @@ export const Tabs = defineComponent({
       default: false,
     },
   },
-  emits: ["update:selected"],
+  emits: ['update:selected'],
   setup: (props, context) => {
     return () => {
-      const tabs = context.slots.default?.();
-      if (!tabs) return () => null;
+      const tabs = context.slots.default?.()
+      if (!tabs) return () => null
       for (let i = 0; i < tabs?.length; i++) {
         if (tabs[i].type !== Tab) {
-          throw new Error("<Tabs> only accepts <Tab> as children");
+          throw new Error('<Tabs> only accepts <Tab> as children')
         }
       }
-      const cp = props.classPrefix;
+      const cp = props.classPrefix
       return (
         <div class={[s.tabs]}>
           <ol class={[s.tabs_nav]}>
             {tabs.map((item) => (
               <li
-                class={[
-                  item.props?.name === props.selected
-                    ? [s.selected, "selected"]
-                    : "",
-                ]}
-                onClick={() =>
-                  context.emit("update:selected", item.props?.name)
-                }
+                class={[item.props?.value === props.selected ? [s.selected, 'selected'] : '']}
+                onClick={() => context.emit('update:selected', item.props?.value)}
               >
                 {item.props?.name}
               </li>
             ))}
           </ol>
           {props.rerenderOnSelect ? (
-            <div key={props.selected}>
-              {tabs.find((item) => item.props?.name === props.selected)}
-            </div>
+            <div key={props.selected}>{tabs.find((item) => item.props?.value === props.selected)}</div>
           ) : (
             <div>
               {tabs.map((item) => (
-                <div v-show={item.props?.name === props.selected}>{item}</div>
+                <div v-show={item.props?.value === props.selected}>{item}</div>
               ))}
             </div>
           )}
         </div>
-      );
-    };
+      )
+    }
   },
-});
+})
 
 export const Tab = defineComponent({
   props: {
     name: {
       type: String as PropType<string>,
+      required: true,
+    },
+    value: {
+      type: String as PropType<string>,
+      required: true,
     },
   },
   setup: (props, context) => {
-    return () => <div>{context.slots.default?.()}</div>;
+    return () => <div>{context.slots.default?.()}</div>
   },
-});
+})
