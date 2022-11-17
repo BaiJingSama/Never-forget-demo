@@ -1,9 +1,9 @@
-import { Dialog } from "vant";
-import { defineComponent, onMounted, PropType, ref } from "vue";
-import { RouterLink, useRoute } from "vue-router";
-import { Icon } from "./Icon";
-import { mePromise } from "./me";
-import s from "./Overlay.module.scss";
+import { Dialog } from 'vant'
+import { defineComponent, onMounted, PropType, ref } from 'vue'
+import { routerKey, RouterLink, useRoute, useRouter } from 'vue-router'
+import { Icon } from './Icon'
+import { mePromise } from './me'
+import s from './Overlay.module.scss'
 
 export const Overlay = defineComponent({
   // props如果不用就别写，会出问题
@@ -13,22 +13,24 @@ export const Overlay = defineComponent({
     },
   },
   setup: (props, context) => {
-    const route = useRoute();
+    const router = useRouter()
+    const route = useRoute()
     const close = () => {
-      props.onClose?.();
-    };
-    const me = ref<User>();
+      props.onClose?.()
+    }
+    const me = ref<User>()
     onMounted(async () => {
-      const response = await mePromise;
-      me.value = response?.data.resource;
-    });
+      const response = await mePromise
+      me.value = response?.data.resource
+    })
     const onSignOut = async () => {
       await Dialog.confirm({
-        title: "确认",
-        message: "真的要退出登录吗？",
-      });
-      localStorage.removeItem("jwt");
-    };
+        title: '确认',
+        message: '真的要退出登录吗？',
+      })
+      localStorage.removeItem('jwt')
+      router.go(0)
+    }
     return () => (
       <>
         <div class={s.mask} onClick={close}></div>
@@ -70,23 +72,21 @@ export const Overlay = defineComponent({
           </nav>
         </div>
       </>
-    );
+    )
   },
-});
+})
 
 export const OverlayIcon = defineComponent({
   setup: (props, context) => {
-    const overlayVisible = ref(false);
+    const overlayVisible = ref(false)
     const onClickMenu = () => {
-      overlayVisible.value = !overlayVisible.value;
-    };
+      overlayVisible.value = !overlayVisible.value
+    }
     return () => (
       <>
         <Icon name="menu" class={s.Icon} onClick={onClickMenu} />
-        {overlayVisible.value && (
-          <Overlay onClose={() => (overlayVisible.value = false)} />
-        )}
+        {overlayVisible.value && <Overlay onClose={() => (overlayVisible.value = false)} />}
       </>
-    );
+    )
   },
-});
+})
