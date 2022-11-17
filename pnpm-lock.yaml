@@ -6,6 +6,7 @@ specifiers:
   '@vitejs/plugin-vue-jsx': 2.0.0
   axios: 0.27.2
   echarts: 5.3.2
+  pinia: 2.0.16
   sass: 1.49.11
   svgo: 2.8.0
   svgstore: 3.0.1
@@ -22,6 +23,7 @@ dependencies:
   '@faker-js/faker': 7.3.0
   axios: 0.27.2
   echarts: 5.3.2
+  pinia: 2.0.16_typescript@4.6.3+vue@3.2.31
   sass: 1.49.11
   svgo: 2.8.0
   svgstore: 3.0.1
@@ -1562,6 +1564,24 @@ packages:
     engines: {node: '>=8.6'}
     dev: false
 
+  /pinia/2.0.16_typescript@4.6.3+vue@3.2.31:
+    resolution: {integrity: sha512-9/LMVO+/epny1NBfC77vnps4g3JRezxhhoF1xLUk8mZkUIxVnwfEAIRiAX8mYBTD/KCwZqnDMqXc8w3eU0FQGg==}
+    peerDependencies:
+      '@vue/composition-api': ^1.4.0
+      typescript: '>=4.4.4'
+      vue: ^2.6.14 || ^3.2.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+      typescript:
+        optional: true
+    dependencies:
+      '@vue/devtools-api': 6.4.3
+      typescript: 4.6.3
+      vue: 3.2.31
+      vue-demi: 0.13.11_vue@3.2.31
+    dev: false
+
   /postcss/8.4.17:
     resolution: {integrity: sha512-UNxNOLQydcOFi41yHNMcKRZ39NeXlr8AxGuZJsdub8vIb12fHzcq37DTU/QtbI6WLxNg2gF9Z+8qtRwTj1UI1Q==}
     engines: {node: ^10 || ^12 || >=14}
@@ -2036,6 +2056,21 @@ packages:
       vscode-pug-languageservice: 0.29.8
       vscode-typescript-languageservice: 0.29.8
     dev: true
+
+  /vue-demi/0.13.11_vue@3.2.31:
+    resolution: {integrity: sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==}
+    engines: {node: '>=12'}
+    hasBin: true
+    requiresBuild: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+    dependencies:
+      vue: 3.2.31
+    dev: false
 
   /vue-router/4.0.14_vue@3.2.31:
     resolution: {integrity: sha512-wAO6zF9zxA3u+7AkMPqw9LjoUCjSxfFvINQj3E/DceTt6uEz1XZLraDhdg2EYmvVwTBSGlLYsUw8bDmx0754Mw==}
