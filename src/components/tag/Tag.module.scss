@@ -10,10 +10,11 @@
 
   .removeTags,
   .removeTagsAndItem {
-    width: calc(50% - 8px);
+    width: 100%;
   }
 }
 
-.button{
+.button {
   width: 100%;
+  margin-bottom: -12px;
 }

@@ -26,8 +26,8 @@ export const TagEdit = defineComponent({
     }
     const onDelete = async (options?: { withItems?: boolean }) => {
       await Dialog.confirm({
-        title: '确认',
-        message: '确定要删除标签吗',
+        title: '警告',
+        message: '确定要删除标签吗?\n标签对应的记账也会被删除\n删除的记账数据不可被找回',
       })
       await http
         .delete(
@@ -52,11 +52,8 @@ export const TagEdit = defineComponent({
             <>
               <TagForm id={numberId} />
               <div class={s.actions}>
-                <Button level="danger" class={s.removeTags} onClick={() => onDelete()}>
-                  删除
-                </Button>
                 <Button level="danger" class={s.removeTagsAndItem} onClick={() => onDelete({ withItems: true })}>
-                  删除标签和记账
+                  删除标签（对应记账也会被删除）
                 </Button>
               </div>
             </>
