@@ -30,7 +30,10 @@ export const Overlay = defineComponent({
         message: '真的要退出登录吗？',
       })
       localStorage.removeItem('jwt')
-      router.go(0)
+      if (route.path === '/') {
+        router.go(0)
+      }
+      router.push('/')
     }
     return () => (
       <>
