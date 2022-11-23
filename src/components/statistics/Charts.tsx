@@ -2,6 +2,7 @@ import { computed, defineComponent, onMounted, PropType, reactive, ref, watch } 
 import { FormItem } from '../../shared/Form'
 import { http } from '../../shared/HttpClient'
 import { Time } from '../../shared/time'
+import { useUserTags } from '../../stores/useUserTags'
 import { Bars } from './Bars'
 import s from './Charts.module.scss'
 import { LineChart } from './LineChart'
@@ -25,8 +26,9 @@ export const Charts = defineComponent({
     },
   },
   setup: (props, context) => {
+    const useUserStore = useUserTags()
     const category = ref('expenses')
-    const kind = ref('expenses')
+    const kind = ref(useUserStore.ChartsKind)
     const data1 = ref<Data1>([])
     const data2 = ref<Data2>([])
     const fetchData1 = async () => {
@@ -113,7 +115,12 @@ export const Charts = defineComponent({
             { value: 'expenses', text: '支出' },
             { value: 'income', text: '收入' },
           ]}
-          v-model={kind.value}
+          // v-model={kind.value}
+          selected={kind.value}
+          onUpdate:modelValue={(value) => {
+            kind.value = value
+            useUserStore.ChartsKindChange(value)
+          }}
         />
         <LineChart data={betterData1.value} />
         <PieChart data={betterData2.value} />

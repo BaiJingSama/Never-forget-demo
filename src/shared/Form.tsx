@@ -42,6 +42,7 @@ export const FormItem = defineComponent({
       default: 60,
     },
     disabled: Boolean,
+    selected: String,
   },
   emits: ['update:modelValue'],
   setup: (props, context) => {
@@ -105,7 +106,7 @@ export const FormItem = defineComponent({
           return (
             <select
               class={[s.formItem, s.select]}
-              value={props.modelValue}
+              value={props.selected}
               onChange={(e: any) => {
                 context.emit('update:modelValue', e.target.value)
               }}

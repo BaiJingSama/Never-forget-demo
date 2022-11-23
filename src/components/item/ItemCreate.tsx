@@ -12,6 +12,7 @@ import { hasError, validate } from '../../shared/validate'
 import { InputPad } from './InputPad'
 import s from './ItemCreate.module.scss'
 import { Tags } from './Tags'
+import { useUserTags } from '../../stores/useUserTags'
 
 export const ItemCreate = defineComponent({
   props: {
@@ -20,10 +21,11 @@ export const ItemCreate = defineComponent({
     },
   },
   setup: (props, context) => {
+    const useUserStore = useUserTags()
     const route = useRoute()
     const router = useRouter()
     const formData = reactive<Partial<Item>>({
-      kind: 'expenses',
+      kind: useUserStore.ItemKind,
       tag_ids: [],
       amount: 0,
       happen_at: new Date().toISOString(),
@@ -99,9 +101,12 @@ export const ItemCreate = defineComponent({
             <>
               <div class={s.wrapper}>
                 <Tabs
-                  v-model:selected={formData.kind}
-                  // selected={refKind.value}
-                  // onUpdate:selected={() => console.log(1)}
+                  // v-model:selected={formData.kind}
+                  selected={formData.kind}
+                  onUpdate:selected={(value) => {
+                    formData.kind = value
+                    useUserStore.ItemKindChange(value)
+                  }}
                   // 二选一
                   class={s.tabs}
                 >
