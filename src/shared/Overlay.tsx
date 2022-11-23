@@ -4,6 +4,7 @@ import { routerKey, RouterLink, useRoute, useRouter } from 'vue-router'
 import { useMeStore } from '../stores/useMeStore'
 import { Icon } from './Icon'
 import s from './Overlay.module.scss'
+import { Toast } from 'vant'
 
 export const Overlay = defineComponent({
   // props如果不用就别写，会出问题
@@ -63,6 +64,11 @@ export const Overlay = defineComponent({
           break
       }
     })
+    const onIndexRepeat = (index: number, text: string) => {
+      if (index === refSelected.value) {
+        Toast(`当前已是${text}`)
+      }
+    }
     return () => (
       <>
         <div class={s.mask} onClick={close}></div>
@@ -83,7 +89,7 @@ export const Overlay = defineComponent({
           <nav>
             <ul class={s.action_list}>
               {linkArray.map((item, index) => (
-                <li>
+                <li onClick={() => onIndexRepeat(index, item.text)}>
                   <RouterLink to={item.to} class={index === refSelected.value ? s.selected : s.action}>
                     <Icon name={item.iconName} class={s.icon} />
                     <span>{item.text}</span>
