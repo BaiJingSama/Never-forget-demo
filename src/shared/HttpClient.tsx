@@ -1,15 +1,5 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { Toast } from 'vant'
-import {
-  mockItemCreate,
-  mockItemIndex,
-  mockItemIndexBalance,
-  mockItemSummary,
-  mockSession,
-  mockTagEdit,
-  mockTagIndex,
-  mockTagShow,
-} from '../mock/mock'
 
 type GetConfig = Omit<AxiosRequestConfig, 'params' | 'url' | 'method'>
 type PostConfig = Omit<AxiosRequestConfig, 'url' | 'data' | 'method'>
@@ -67,14 +57,7 @@ export class HttpClient {
   }
 }
 
-function isDev() {
-  if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1' && location.hostname !== '192.168.1.3') {
-    return false
-  }
-  return true
-}
-
-export const http = new HttpClient(isDev() ? 'api/v1' : 'http://121.196.236.94:8080/api/v1')
+export const http = new HttpClient(DEBUG ? 'api/v1' : 'http://121.196.236.94:8080/api/v1')
 
 http.instance.interceptors.request.use((config) => {
   const jwt = localStorage.getItem('jwt')
@@ -123,14 +106,6 @@ if (DEBUG) {
       mockTagShow,
     }) => {
       const mock = (response: AxiosResponse) => {
-        if (
-          true ||
-          (location.hostname !== 'localhost' &&
-            location.hostname !== '127.0.0.1' &&
-            location.hostname !== '192.168.1.3')
-        ) {
-          return false
-        }
         switch (response.config?._mock) {
           case 'itemIndex':
             ;[response.status, response.data] = mockItemIndex(response.config)
