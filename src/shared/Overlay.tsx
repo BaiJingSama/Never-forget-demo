@@ -35,6 +35,34 @@ export const Overlay = defineComponent({
       }
       router.push('/')
     }
+    const refSelected = ref<number>(0)
+    const linkArray = [
+      { to: '/items', iconName: 'logo', text: '回到首页' },
+      { to: '/items/create', iconName: 'pig', text: '记一笔账' },
+      { to: '/statistics', iconName: 'statistics', text: '统计图表' },
+      { to: '/export', iconName: 'export', text: '导出数据' },
+      { to: '/notify', iconName: 'notify', text: '记账提醒' },
+    ]
+    onMounted(() => {
+      const path = route.path
+      switch (path) {
+        case '/items':
+          refSelected.value = 0
+          break
+        case '/items/create':
+          refSelected.value = 1
+          break
+        case '/statistics':
+          refSelected.value = 2
+          break
+        case '/export':
+          refSelected.value = 3
+          break
+        case '/notify':
+          refSelected.value = 4
+          break
+      }
+    })
     return () => (
       <>
         <div class={s.mask} onClick={close}></div>
@@ -54,37 +82,14 @@ export const Overlay = defineComponent({
           </section>
           <nav>
             <ul class={s.action_list}>
-              <li>
-                <RouterLink to="/items" class={s.action}>
-                  <Icon name="logo" class={s.icon} />
-                  <span>回到首页</span>
-                </RouterLink>
-              </li>
-              <li>
-                <RouterLink to="/items/create" class={s.action}>
-                  <Icon name="pig" class={s.icon} />
-                  <span>记一笔账</span>
-                </RouterLink>
-              </li>
-
-              <li>
-                <RouterLink to="/statistics" class={s.action}>
-                  <Icon name="statistics" class={s.icon} />
-                  <span>统计图表</span>
-                </RouterLink>
-              </li>
-              <li>
-                <RouterLink to="/export" class={s.action}>
-                  <Icon name="export" class={s.icon} />
-                  <span>导出数据</span>
-                </RouterLink>
-              </li>
-              <li>
-                <RouterLink to="/notify" class={s.action}>
-                  <Icon name="notify" class={s.icon} />
-                  <span>记账提醒</span>
-                </RouterLink>
-              </li>
+              {linkArray.map((item, index) => (
+                <li>
+                  <RouterLink to={item.to} class={index === refSelected.value ? s.selected : s.action}>
+                    <Icon name={item.iconName} class={s.icon} />
+                    <span>{item.text}</span>
+                  </RouterLink>
+                </li>
+              ))}
             </ul>
           </nav>
         </div>
