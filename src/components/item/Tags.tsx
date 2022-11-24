@@ -1,4 +1,4 @@
-import { defineComponent, onMounted, PropType, ref } from 'vue'
+import { defineComponent, onMounted, onUpdated, PropType, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { Button } from '../../shared/Button'
 import { http } from '../../shared/HttpClient'
@@ -28,9 +28,7 @@ export const Tags = defineComponent({
         },
       )
     })
-    onMounted(() => {
-      fetchTags()
-    })
+
     const onSelect = (tag: Tag) => {
       context.emit('update:selected', tag.id)
     }
