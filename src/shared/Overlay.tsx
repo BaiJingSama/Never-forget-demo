@@ -31,10 +31,11 @@ export const Overlay = defineComponent({
         message: '真的要退出登录吗？',
       })
       localStorage.removeItem('jwt')
-      if (route.path === '/') {
-        router.go(0)
+      if (route.path === '/items') {
+        window.location.reload()
       }
-      router.push('/')
+      router.push('/items')
+      window.location.reload()
     }
     const refSelected = ref<number>(0)
     const linkArray = [
