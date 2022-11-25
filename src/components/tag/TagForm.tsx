@@ -1,4 +1,4 @@
-import { defineComponent, onMounted, PropType, reactive, toRaw } from 'vue'
+import { defineComponent, onMounted, PropType, reactive, toRaw, watch } from 'vue'
 import { Button } from '../../shared/Button'
 import { hasError, Rules, validate } from '../../shared/validate'
 import { Form, FormItem } from '../../shared/Form'
@@ -23,6 +23,13 @@ export const TagForm = defineComponent({
     if (!route.query.kind) {
       return () => <div>可以自定义错误提示</div>
     }
+    watch(
+      () => route.path,
+      () => {
+        console.log('我刷新了')
+        window.location.reload()
+      },
+    )
     const errors = reactive<FormErrors<typeof formData>>({})
     const onSubmit = async (e: Event) => {
       e.preventDefault()
